@@ -11,10 +11,6 @@ RUN apt-get update && apt-get install -y \
   libpq-dev \
 && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
 &&  docker-php-ext-install pdo_pgsql pgsql
-  
-#RUN apt-get install -y libpq-dev \
-#    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-#    && docker-php-ext-install pdo pdo_pgsql pgsql
 	
 #Config nginx, php-fpm, supervisord  
 COPY default.conf.template /etc/nginx/conf.d/default.conf
