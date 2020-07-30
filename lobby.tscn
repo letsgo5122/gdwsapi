@@ -297,6 +297,8 @@ text = "Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="HTTPGet" type="HTTPRequest" parent="."]
 [connection signal="pressed" from="CanvasLayer/InfoPanel/join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="CanvasLayer/InfoPanel/serverStart" to="." method="_on_serverStart_pressed"]
 [connection signal="pressed" from="CanvasLayer/InfoPanel/newAccount" to="." method="_on_newAccount_pressed"]

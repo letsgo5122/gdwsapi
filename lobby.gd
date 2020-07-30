@@ -1,6 +1,6 @@
 extends Node
 
-var ShowPanel = false
+#var ShowPanel = false
 func _ready():
 	$CreateAccount/AccountPanel.visible = false
 	gamestate.connect("refreshList", self, "refreshList")
@@ -48,9 +48,9 @@ func _on_BackInfoPanel_pressed():
 func _on_Create_pressed():
 	var u_name = $CreateAccount/AccountPanel/UserNameEdit.text
 	var u_password = $CreateAccount/AccountPanel/passwordEdit.text
-	rpc_id(1,"save_account", u_name, u_password)
-	#save_account(u_name,u_password)
-	pass # Replace with function body.
+	#rpc_id(1,"save_account", u_name, u_password)
+	#HTTPRequest
+
 	
 #func save_account(u_name,u_password):
 remote func save_account(u_name,u_password):
