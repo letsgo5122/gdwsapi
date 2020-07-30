@@ -45,13 +45,6 @@ func _on_BackInfoPanel_pressed():
 	$CreateAccount/AccountPanel.visible = false
 	pass # Replace with function body.
 
-func _on_Create_pressed():
-	var u_name = $CreateAccount/AccountPanel/UserNameEdit.text
-	var u_password = $CreateAccount/AccountPanel/passwordEdit.text
-	#rpc_id(1,"save_account", u_name, u_password)
-	#HTTPRequest
-
-	
 #func save_account(u_name,u_password):
 remote func save_account(u_name,u_password):
 	var save_user = {u_name:u_password}
@@ -87,4 +80,18 @@ remote func check_account():
 remotesync func show_account(user_data):
 	$CreateAccount/AccountPanel/AccountList.text = user_data
 
-
+func _on_Create_pressed():
+	var u_name = $CreateAccount/AccountPanel/UserNameEdit.text
+	var u_password = $CreateAccount/AccountPanel/passwordEdit.text
+	#rpc_id(1,"save_account", u_name, u_password)
+	#HTTPRequest
+	var query = "act=listUser&name=u_name&passwd=u_password"
+	var headers = ["Content-Type: application/x-www-form-urlencoded","Content-Length:"+str(query.length())]
+	$HTTPPost.request("http://localhost/gdapi.php?",headers,false,HTTPClient.METHOD_POST,query);
+	
+func _on_HTTPGet_request_completed(result, response_code, headers, body):
+	if result == HTTPRequest.RESULT_SUCCESS:
+		if response_code == 200:
+			print(body.get_string_from_utf8())
+		else:
+			print("http error")
