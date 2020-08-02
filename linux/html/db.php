@@ -22,8 +22,7 @@ try{
 $sql = "CREATE TABLE IF NOT EXISTS public.user(
 id serial PRIMARY KEY,
 name varchar(40) NOT NULL UNIQUE,
-passwd varchar(40) NOT NULL,
-nick varchar(40) NOT NULL UNIQUE
+passwd varchar(40) NOT NULL
 )";
 
 $pdo->exec($sql);

@@ -1,12 +1,11 @@
 <?php
 include("db.php");
-//$act = $_POST['act'];
-//$name = $_POST['name'];
-//$nick = $_POST['nick'];
-//$passwd = $_POST['passwd'];
 
-$act = 'listUser';
-$name = 'Ann';
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
+$act = $data["act"];
+$name = $data["name"];
+$passwd = $data["passwd"];
 
 switch ($act) {
   case 'listUser':
@@ -16,10 +15,10 @@ switch ($act) {
     echo allUsers($pdo);
     break;
   case 'insert':
-    echo insertUser($pdo ,$name,$nick,$passwd);
+    echo insertUser($pdo,$name,$passwd);
     break;
   case 'update':
-    echo updateUser($pdo,$name,$nick,$passwd);
+    echo updateUser($pdo,$name,$passwd);
     break;
   case 'delete':
     echo deleteUser($pdo,$name,$passwd);
@@ -27,39 +26,33 @@ switch ($act) {
 }
 
 function listUser($pdo,$name){
-	$list = '';
+	$ret_arr= array();
   try{
-	$sql = "SELECT id,name,nick FROM public.user WHERE name = :name" ;
+	$sql = "SELECT id,name,passwd FROM public.user WHERE name = :name" ;
 	$stmt = $pdo->prepare($sql);
     $stmt->bindValue(':name', $name);
     $stmt->execute();
 	$result = $stmt->fetchAll();   
-	if ($sql==null){return 0;}
-	
- 	foreach($result as $row)
-		{			
-			$list .= $row[0].'-'.$row[1].'-'.$row[2].'<br/>';
-		} 
-	/* foreach($result as $key=>$value)
-		{			
-			echo $key.$value[1].'<br/>';
-		} */
+	if ($result==null){return json_encode($ret_arr);}
 
-	return $list;
-	
+	foreach($result as $row)
+		{			
+			array_push($ret_arr, $row[0].$row[1].$row[2]);
+		} 
+	return json_encode($ret_arr);
   }
   catch(PDOException $e){
 	echo 'error'.$e->getMessage();
   }	
 }
 	
-function insertUser($pdo ,$name, $nick, $passwd){
+function insertUser($pdo ,$name, $passwd){
+	$ret_arr= array();
     try{
-	$sql = 'INSERT INTO public.user(name,nick,passwd) VALUES(:name,:nick,:passwd)';
+	$sql = 'INSERT INTO public.user(name,passwd) VALUES(:name,:passwd)';
     $stmt = $pdo->prepare($sql);
     // pass values to the statement
     $stmt->bindValue(':name', $name);
-    $stmt->bindValue(':nick', $nick);
     $stmt->bindValue(':passwd', $passwd);
     // execute the insert statement
     $stmt->execute();
@@ -68,24 +61,36 @@ function insertUser($pdo ,$name, $nick, $passwd){
 		echo $e->getMessage();
 	}
 	// return generated id
-    return $pdo->lastInsertId('user_id_seq');
+	$id = $pdo->lastInsertId('user_id_seq');
+	try{
+	$sql = 'SELECT id,name,passwd from public.user WHERE id = :id';
+	$stmt = $pdo->prepare($sql);
+    // pass values to the statement
+    $stmt->bindValue(':id', $id );
+	$stmt->execute();
+	$result = $stmt->fetchAll(); 
+	return json_encode($result);
+	}
+	catch(PDOException $e){
+	echo 'error'.$e->getMessage();
+  }	
 }
 function allUsers($pdo){
 	$list = '';
+	$ret_arr = array();
 	try{
 	$sql = "SELECT * from public.user";
 	foreach($pdo->query($sql) as $row)
 		{
-			//print"<br/>";
-			//print $row['id'].'-'.$row['name'].'-'.$row['nick'].'<br/>';
-			$list = $list.$row['id'].'-'.$row['name'].'-'.$row['nick'].'<br/>';
+			array_push($ret_arr, $row['id'].$row['name']);
+
 		}
-	return $list;
+	
 	}
 	catch(PDOException $e){
 		echo 'error'.$e->getMessage();
 	}
-	
+	return json_encode($ret_arr);
 }
 
 

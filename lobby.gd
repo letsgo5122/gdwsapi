@@ -45,53 +45,36 @@ func _on_BackInfoPanel_pressed():
 	$CreateAccount/AccountPanel.visible = false
 	pass # Replace with function body.
 
-#func save_account(u_name,u_password):
-remote func save_account(u_name,u_password):
-	var save_user = {u_name:u_password}
-	var account = File.new()
-	if not account.file_exists("/home/pub/account.save"):
-		account.open("/home/pub/account.save", File.WRITE)
-	else:
-		#If the file does not exist when use File.READ_WRITE will get errors
-		account.open("/home/pub/account.save", File.READ_WRITE)
-	account.seek_end()
-	account.store_line(to_json(save_user))
-	account.close()
-	
-func _on_ShowAccountBt_pressed():
-	rpc_id(1, "check_account")
-	#show_account()
-	pass # Replace with function body.
-	
-#func show_account():
-remote func check_account():
-	var account = File.new()
-	if not account.file_exists("/home/pub/account.save"):
-		return #
-	account.open("/home/pub/account.save", File.READ)
-	var user_data =""
-	while account.get_position() < account.get_len():
-		#user_data += parse_json(account.get_line())
-		user_data += account.get_line()
-	#$CreateAccount/AccountPanel/AccountList.text = user_data
-	account.close()
-	rpc("show_account",user_data)
-
-remotesync func show_account(user_data):
-	$CreateAccount/AccountPanel/AccountList.text = user_data
-
 func _on_Create_pressed():
 	var u_name = $CreateAccount/AccountPanel/UserNameEdit.text
 	var u_password = $CreateAccount/AccountPanel/passwordEdit.text
-	#rpc_id(1,"save_account", u_name, u_password)
-	#HTTPRequest
-	var query = "act=listUser&name=u_name&passwd=u_password"
-	var headers = ["Content-Type: application/x-www-form-urlencoded","Content-Length:"+str(query.length())]
-	$HTTPPost.request("http://localhost/gdapi.php?",headers,false,HTTPClient.METHOD_POST,query);
-	
-func _on_HTTPGet_request_completed(result, response_code, headers, body):
+	var trimname = u_name.strip_edges(true,true)
+	if trimname != "":
+		var url="http://"+gamestate.SERVER_IP+"/"+"gdapi.php"
+		#post json
+		var act = "insert"
+		var data_to_send = {"act":act,"name":trimname,"passwd":u_password}
+		var query = JSON.print(data_to_send)
+		# Add 'Content-Type' header:
+		var headers = ["Content-Type: application/json"]
+		var error = $HTTPPost.request(url, headers, false, HTTPClient.METHOD_POST, query)
+		if error != OK:
+			push_error("An error occurred in the HTTP request.")
+	else:
+		$CreateAccount/AccountPanel/AccountList.text = "Please Enter User Name And Nick Name."
+
+
+func _on_HTTPPost_request_completed(result, response_code, headers, body):
 	if result == HTTPRequest.RESULT_SUCCESS:
-		if response_code == 200:
-			print(body.get_string_from_utf8())
+		if response_code == 200 :
+			#print(body.get_string_from_utf8())
+			var json = JSON.parse(body.get_string_from_utf8())
+			print(json.result)
+			if !json.result.empty():
+				for ar in json.result:
+					$CreateAccount/AccountPanel/AccountList.text = ""
+					$CreateAccount/AccountPanel/AccountList.append_bbcode(str(ar.get('id'))+":"+ar.get('name')+"\n")
+			else:
+				$CreateAccount/AccountPanel/AccountList.text = "Username Already Exist."
 		else:
-			print("http error")
+			$CreateAccount/AccountPanel/AccountList.text = "err code:"+str(response_code)

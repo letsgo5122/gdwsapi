@@ -217,42 +217,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="username" type="Label" parent="CreateAccount/AccountPanel"]
+margin_left = 98.8595
+margin_top = 71.4178
+margin_right = 227.859
+margin_bottom = 106.418
+custom_fonts/font = SubResource( 13 )
+text = "User Name:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="UserNameEdit" type="LineEdit" parent="CreateAccount/AccountPanel"]
 margin_left = 231.016
-margin_top = 84.0218
+margin_top = 69.0218
 margin_right = 457.016
-margin_bottom = 121.022
+margin_bottom = 106.022
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="password" type="Label" parent="CreateAccount/AccountPanel"]
 margin_left = 99.8595
-margin_top = 153.418
+margin_top = 138.418
 margin_right = 228.859
-margin_bottom = 188.418
-custom_fonts/font = SubResource( 13 )
-text = "Password:"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="username" type="Label" parent="CreateAccount/AccountPanel"]
-margin_left = 98.8595
-margin_top = 86.4178
-margin_right = 227.859
-margin_bottom = 121.418
+margin_bottom = 173.418
 custom_fonts/font = SubResource( 14 )
-text = "User Name:"
+text = "Password:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="passwordEdit" type="LineEdit" parent="CreateAccount/AccountPanel"]
 margin_left = 231.016
-margin_top = 152.022
+margin_top = 137.022
 margin_right = 457.016
-margin_bottom = 189.022
+margin_bottom = 174.022
 secret = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -264,16 +264,6 @@ margin_top = 143.151
 margin_right = 647.463
 margin_bottom = 193.151
 text = "Create"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ShowAccountBt" type="Button" parent="CreateAccount/AccountPanel"]
-margin_left = 506.609
-margin_top = 222.854
-margin_right = 642.609
-margin_bottom = 271.854
-text = "Show Account"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -303,6 +293,5 @@ __meta__ = {
 [connection signal="pressed" from="CanvasLayer/InfoPanel/serverStart" to="." method="_on_serverStart_pressed"]
 [connection signal="pressed" from="CanvasLayer/InfoPanel/newAccount" to="." method="_on_newAccount_pressed"]
 [connection signal="pressed" from="CreateAccount/AccountPanel/Create" to="." method="_on_Create_pressed"]
-[connection signal="pressed" from="CreateAccount/AccountPanel/ShowAccountBt" to="." method="_on_ShowAccountBt_pressed"]
 [connection signal="pressed" from="CreateAccount/AccountPanel/BackInfoPanel" to="." method="_on_BackInfoPanel_pressed"]
-[connection signal="request_completed" from="HTTPPost" to="." method="_on_HTTPGet_request_completed"]
+[connection signal="request_completed" from="HTTPPost" to="." method="_on_HTTPPost_request_completed"]
