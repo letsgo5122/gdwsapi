@@ -50,7 +50,7 @@ func _on_Create_pressed():
 	var u_password = $CreateAccount/AccountPanel/passwordEdit.text
 	var trimname = u_name.strip_edges(true,true)
 	if trimname != "":
-		var url="http://"+gamestate.SERVER_IP+"/"+"gdapi.php"
+		var url = gamestate.SERVER_PHP+"/"+"gdapi.php"
 		#post json
 		var act = "insert"
 		var data_to_send = {"act":act,"name":trimname,"passwd":u_password}

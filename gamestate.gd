@@ -10,10 +10,12 @@ const PROTO_NAME = "Robin"
 
 #heroku server,Heroku websocketclient URL
 var SERVER_IP = "gdwsapi.herokuapp.com"
+var SERVER_PHP = "https://gdwsapi.herokuapp.com"
 var CON2URL = "wss://" + SERVER_IP+ ":" + str("443")+ "/gd/"
 
 #local:local server websocketclient URL
 #var SERVER_IP = "127.0.0.1"
+#var SERVER_PHP = "127.0.0.1"
 #var CON2URL ="ws://" + "127.0.0.1"+ ":" + str("5122")
 #-----------------------------------------------------------
 #local:Docker container with nginx redirect to 127.0.0.1:5122
